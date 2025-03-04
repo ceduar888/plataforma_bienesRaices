@@ -1,0 +1,14 @@
+extends ../layout/index
+
+block contenido
+    div.py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Bienes 
+            span.font-normal Raices
+        h2.text-center.font-bold= page
+
+        a(href="/propiedades/crear" class="rounded py-2 bg-indigo-500 hover:bg-indigo-700 text-sm px-10 text-center font-bold text-white uppercase inline-block my-5 w-full md:w-auto") Publicar Propiedad
+
+        if errores 
+            div(class="max-w-md mx-auto my-10")
+                each error in errores
+                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg 
