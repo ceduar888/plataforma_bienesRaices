@@ -69,7 +69,7 @@ const autenticarLogin = async (req, res) => {
         httpOnly: true,
         // secure: true,
         // sameSite: true
-    }).redirect('/mis-propiedades')
+    }).redirect('/propiedades/mis-propiedades')
 }
 
 // METODOS DEL REGISTRO

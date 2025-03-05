@@ -1,10 +1,11 @@
 import e from "express";
 import { body } from "express-validator";
 import { admin, crear, guardar } from "../controllers/propiedadController.js";
+import protegerRuta from "../middleware/protegerRutas.js";
 
 const router = e.Router();
 
-router.get('/mis-propiedades', admin)
+router.get('/mis-propiedades', protegerRuta, admin)
 router.get('/crear', crear)
 router.post('/crear',
     body('titulo').notEmpty().withMessage('Digita el Titulo del anuncio'),
