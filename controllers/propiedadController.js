@@ -1,4 +1,5 @@
-import { body, validationResult } from "express-validator"
+import { validationResult } from "express-validator"
+import { unlink } from 'node:fs/promises'
 import { Precio, Categoria, Propiedad } from "../models/index.js"
 
 const admin = async (req, res) => {
@@ -18,7 +19,8 @@ const admin = async (req, res) => {
 
     res.render('propiedades/admin', {
         page: 'Mis Propiedades',
-        propiedades
+        propiedades,
+        token: req.csrfToken(),
     })
 }
 
@@ -251,6 +253,39 @@ const guardarCambios = async (req, res) => {
     }
 }
 
+const eliminar = async (req, res) => {
+    
+    // Obtener el id de la propiedad de la ruta
+    const { id } = req.params
+    
+    const propiedad = await Propiedad.findByPk(id)
+
+    if(!propiedad) {
+
+       return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Quien edite la propiedad sea el que la creo
+    if(propiedad.id_user.toString() !== req.usuario.id.toString()){
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    try {
+
+        // Eliminar la imagen
+        await unlink(`public/uploads/${propiedad.imagen}`)
+
+        // Eliminar la propiedad
+        await propiedad.destroy()
+
+        res.redirect('/propiedades/mis-propiedades')
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
     admin,
     crear,
@@ -258,5 +293,6 @@ export {
     agregarImg,
     almacenarImagen,
     editar,
-    guardarCambios
+    guardarCambios,
+    eliminar
 }

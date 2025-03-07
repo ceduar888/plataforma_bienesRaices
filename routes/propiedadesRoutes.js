@@ -1,6 +1,6 @@
 import e from "express";
 import { body } from "express-validator";
-import { admin, crear, guardar, agregarImg, almacenarImagen, editar, guardarCambios } from "../controllers/propiedadController.js";
+import { admin, crear, guardar, agregarImg, almacenarImagen, editar, guardarCambios, eliminar } from "../controllers/propiedadController.js";
 import protegerRuta from "../middleware/protegerRutas.js";
 import upload from "../middleware/subirImagen.js";
 
@@ -60,6 +60,11 @@ router.post('/editar/:id',
     body('wc').isNumeric().withMessage('Selecciona el numero de baños'),
     body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
     guardarCambios
+)
+
+router.post('/eliminar/:id',
+    protegerRuta,
+    eliminar
 )
 
 export default router
