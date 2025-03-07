@@ -153,10 +153,110 @@ const almacenarImagen = async (req, res, next) => {
     }
 }
 
+const editar = async (req, res) => {
+
+    // Obtener el id de la propiedad de la ruta
+    const { id } = req.params
+
+    const propiedad = await Propiedad.findByPk(id)
+
+    if(!propiedad) {
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Quien edite la propiedad sea el que la creo
+    if(propiedad.id_user.toString() !== req.usuario.id.toString()){
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+    
+    // Obtener los registros de Precios y Categorias y mostrarlos en la vista
+    const [categorias, precios] = await Promise.all([
+        Categoria.findAll(),
+        Precio.findAll()
+    ])
+
+    res.render('propiedades/editar', {
+        page: `Editar Propiedad: ${propiedad.titulo}`,
+        token: req.csrfToken(),
+        categorias,
+        precios,
+        datos: propiedad
+    })    
+}
+
+const guardarCambios = async (req, res) => {
+    
+    // Validaciones del formulario
+    let resultado = validationResult(req);
+
+    if(!resultado.isEmpty()) {
+
+        const [categorias, precios] = await Promise.all([
+            Categoria.findAll(),
+            Precio.findAll()
+        ])
+
+        return res.render('propiedades/editar', {
+            page: 'Editar Propiedad',
+            token: req.csrfToken(),
+            errores: resultado.array(),
+            categorias,
+            precios,
+            datos: req.body
+        }) 
+    }
+
+    // Obtener el id de la propiedad de la ruta
+    const { id } = req.params
+    
+    const propiedad = await Propiedad.findByPk(id)
+
+    if(!propiedad) {
+
+       return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Quien edite la propiedad sea el que la creo
+    if(propiedad.id_user.toString() !== req.usuario.id.toString()){
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Actualizar el registro
+    try {
+        
+        const { titulo, descripcion, categoria: id_categoria, precio: id_precio, habitaciones, estacionamiento, wc, calle, lat, lng } = req.body
+
+        propiedad.set({
+            titulo, 
+            descripcion, 
+            id_categoria, 
+            id_precio, 
+            habitaciones, 
+            estacionamiento, 
+            wc, 
+            calle, 
+            lat, 
+            lng
+        })
+
+        await propiedad.save()
+
+        res.redirect('/propiedades/mis-propiedades')
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
     admin,
     crear,
     guardar,
     agregarImg,
-    almacenarImagen
+    almacenarImagen,
+    editar,
+    guardarCambios
 }
