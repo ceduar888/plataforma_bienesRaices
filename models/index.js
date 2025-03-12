@@ -5,7 +5,7 @@ import Precio from './Precio.js'
 
 Propiedad.belongsTo(Precio, {foreignKey: 'id_precio', as: 'precio'})
 Propiedad.belongsTo(Categoria, {foreignKey: 'id_categoria', as: 'categoria'})
-Propiedad.belongsTo(User, {foreignKey: 'id_user'})
+Propiedad.belongsTo(User, {foreignKey: 'id_user', as: 'usuario'})
 
 export {
     Propiedad,

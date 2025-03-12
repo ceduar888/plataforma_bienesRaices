@@ -3,6 +3,8 @@ import csurf from "csurf";
 import cookieParser from "cookie-parser";
 import userRoutes from './routes/userRoutes.js'
 import propiedadRoutes from './routes/propiedadesRoutes.js'
+import appRoutes from './routes/appRoutes.js'
+import apiRoutes from './routes/apiRoutes.js'
 import db from "./config/database.js";
 
 const app = e()
@@ -21,8 +23,10 @@ app.set('view engine', 'pug')
 app.set('views', './views')
 
 // Routing
+app.use('/', appRoutes)
 app.use('/auth', userRoutes)
 app.use('/propiedades', propiedadRoutes)
+app.use('/api', apiRoutes)
 
 // Public
 app.use( e.static('public') )
