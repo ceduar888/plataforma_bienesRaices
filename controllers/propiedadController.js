@@ -1,6 +1,8 @@
 import { validationResult } from "express-validator"
 import { unlink } from 'node:fs/promises'
-import { Precio, Categoria, Propiedad } from "../models/index.js"
+import { Precio, Categoria, Propiedad, Mensaje, User } from "../models/index.js"
+import { esVendedor, formatearFecha } from "../helpers/index.js"
+
 
 const admin = async (req, res) => {
 
@@ -31,7 +33,8 @@ const admin = async (req, res) => {
                 },
                 include: [
                     { model: Categoria, as: 'categoria' },
-                    { model: Precio, as: 'precio' }
+                    { model: Precio, as: 'precio' },
+                    { model: Mensaje, as: 'mensaje' }
                 ]
             }),
             Propiedad.count({
@@ -341,7 +344,96 @@ const mostrarPropiedad = async (req, res) => {
     res.render('propiedades/mostrar', {
         page: propiedad.titulo,
         propiedad,
-        token: req.csrfToken()
+        token: req.csrfToken(),
+        usuario: req.usuario,
+        esVendedor: esVendedor(req.usuario?.id, propiedad.id_user)
+    })
+}
+
+const enviarMensaje = async (req, res) => {
+    // Validaciones
+    const { id } = req.params
+
+    const propiedad = await Propiedad.findByPk(id, {
+        include: [
+            { model: Categoria, as: 'categoria' },
+            { model: Precio, as: 'precio' }
+        ]
+    })
+
+    if(!propiedad) {
+
+        return res.redirect('/404')
+    }
+
+    // Errores
+    let resultado = validationResult(req);
+
+    if(!resultado.isEmpty()) {
+
+        return res.render('propiedades/mostrar', {
+            page: propiedad.titulo,
+            propiedad,
+            token: req.csrfToken(),
+            usuario: req.usuario,
+            esVendedor: esVendedor(req.usuario?.id, propiedad.id_user),
+            errores: resultado.array()
+        })
+    }
+
+    // Extrayendo los datos de la request
+    const { mensaje } = req.body
+    const { id: id_propiedad } = req.params
+    const { id: id_user } = req.usuario
+
+    // Almacenar mensaje
+    await Mensaje.create({
+        mensaje,
+        id_propiedad,
+        id_user
+    })
+
+    res.render('propiedades/mostrar', {
+        page: propiedad.titulo,
+        propiedad,
+        token: req.csrfToken(),
+        usuario: req.usuario,
+        esVendedor: esVendedor(req.usuario?.id, propiedad.id_user),
+        enviado: true
+    })
+}
+
+// Ver mensajes recibidos
+const verMensajes = async (req, res) => {
+
+    // Obtener el id de la propiedad de la ruta
+    const { id } = req.params
+    
+    const propiedad = await Propiedad.findByPk(id, {
+        include: [
+            { model: Mensaje, as: 'mensaje', 
+                include: [
+                    { model: User.scope('eliminarPassword'), as: 'usuario' }
+                ]
+            }
+        ]
+    })
+
+    if(!propiedad) {
+
+       return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Quien edite la propiedad sea el que la creo
+    if(propiedad.id_user.toString() !== req.usuario.id.toString()){
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    res.render('propiedades/mensajes', {
+        page: 'Mensajes',
+        mensajes: propiedad.mensaje,
+        formatearFecha
     })
 }
 
@@ -354,5 +446,7 @@ export {
     editar,
     guardarCambios,
     eliminar,
-    mostrarPropiedad
+    mostrarPropiedad,
+    enviarMensaje,
+    verMensajes
 }

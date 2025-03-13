@@ -3,7 +3,7 @@ import precios from "./precios.js";
 import usuario from "./usuarios.js";
 import db from "../config/database.js";
 
-import { Propiedad, Precio, Categoria, User } from '../models/index.js'
+import { Precio, Categoria, User } from '../models/index.js'
 
 const importarDatos = async () => {
     try {

@@ -1,10 +1,11 @@
 import e from "express";
 import { body } from "express-validator";
 import { admin, crear, guardar, agregarImg, almacenarImagen, editar, guardarCambios, eliminar,
-         mostrarPropiedad 
+         mostrarPropiedad, enviarMensaje, verMensajes 
 } from "../controllers/propiedadController.js";
 import protegerRuta from "../middleware/protegerRutas.js";
 import upload from "../middleware/subirImagen.js";
+import identificarUsuario from '../middleware/identificarUsuario.js'
 
 const router = e.Router();
 
@@ -69,9 +70,23 @@ router.post('/eliminar/:id',
     eliminar
 )
 
+// Leer mensajes recibidos
+router.get('/mensajes/:id', 
+    protegerRuta,
+    verMensajes
+)
+
 // Rutas publicas
 router.get('/propiedad/:id',
+    identificarUsuario,
     mostrarPropiedad
+)
+
+// Mensajes al vendedor
+router.post('/propiedad/:id',
+    identificarUsuario,
+    body('mensaje').isLength({min: 10}).withMessage('El mensaje no puede ir vacio o es muy corto'),
+    enviarMensaje
 )
 
 export default router
