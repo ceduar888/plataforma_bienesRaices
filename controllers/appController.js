@@ -9,7 +9,8 @@ const inicio = async (req, res) => {
         Propiedad.findAll({
             limit: 3,
             where: {
-                id_categoria: 1
+                id_categoria: 1,
+                publicado: true
             },
             include: [
                 {model: Precio, as: 'precio'}
@@ -19,7 +20,8 @@ const inicio = async (req, res) => {
         Propiedad.findAll({
             limit: 3,
             where: {
-                id_categoria: 2
+                id_categoria: 2,
+                publicado: true
             },
             include: [
                 {model: Precio, as: 'precio'}
@@ -51,7 +53,8 @@ const categoria = async (req, res) => {
     // Obtener las propiedades de esa categoria
     const propiedades = await Propiedad.findAll({
         where: {
-            id_categoria: id
+            id_categoria: id,
+            publicado: true
         },
         include: [
             {model: Precio, as: 'precio'},
@@ -87,7 +90,8 @@ const buscador = async (req, res) => {
         where: {
             titulo: {
                 [Sequelize.Op.like] : '%' + termino + '%'
-            }
+            },
+            publicado: true
         },
         include: [
             {model: Precio, as: 'precio'}

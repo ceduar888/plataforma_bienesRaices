@@ -1,7 +1,7 @@
 import e from "express";
 import { body } from "express-validator";
 import { admin, crear, guardar, agregarImg, almacenarImagen, editar, guardarCambios, eliminar,
-         mostrarPropiedad, enviarMensaje, verMensajes 
+         mostrarPropiedad, enviarMensaje, verMensajes, cambiarEstado 
 } from "../controllers/propiedadController.js";
 import protegerRuta from "../middleware/protegerRutas.js";
 import upload from "../middleware/subirImagen.js";
@@ -68,6 +68,11 @@ router.post('/editar/:id',
 router.post('/eliminar/:id',
     protegerRuta,
     eliminar
+)
+
+router.put('/propiedades/:id', 
+    protegerRuta,
+    cambiarEstado
 )
 
 // Leer mensajes recibidos

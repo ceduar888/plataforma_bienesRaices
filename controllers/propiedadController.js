@@ -324,6 +324,35 @@ const eliminar = async (req, res) => {
     }
 }
 
+// Modificar el estado de la propiedad Publicado/No publicado
+const cambiarEstado = async (req, res) => {
+    
+    // Obtener el id de la propiedad de la ruta
+    const { id } = req.params
+    
+    const propiedad = await Propiedad.findByPk(id)
+
+    if(!propiedad) {
+
+       return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Quien edite la propiedad sea el que la creo
+    if(propiedad.id_user.toString() !== req.usuario.id.toString()){
+
+        return res.redirect('/propiedades/mis-propiedades')
+    }
+
+    // Actualizar
+    propiedad.publicado = !propiedad.publicado
+
+    await propiedad.save()
+
+    res.json({
+        resultado: true
+    })
+}
+
 const mostrarPropiedad = async (req, res) => {
 
     // Validaciones
@@ -448,5 +477,6 @@ export {
     eliminar,
     mostrarPropiedad,
     enviarMensaje,
-    verMensajes
+    verMensajes,
+    cambiarEstado
 }
