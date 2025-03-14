@@ -72,6 +72,11 @@ const autenticarLogin = async (req, res) => {
     }).redirect('/propiedades/mis-propiedades')
 }
 
+// Cerrar Sesion
+const cerrarSesion = async (req, res) => {
+    return res.clearCookie('_token').status(200).redirect('/inicio')
+}
+
 // METODOS DEL REGISTRO
 const registro = (req, res) => {
     res.render('auth/registro', {
@@ -284,5 +289,6 @@ export {
     resetPassword,
     comprobarToken,
     nuevoPassword,
-    autenticarLogin
+    autenticarLogin,
+    cerrarSesion
 }

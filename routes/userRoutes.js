@@ -1,12 +1,14 @@
 import e from "express";
 import { login, registro, olvidePassword, registrarUsuario, 
     confirmarCorreo, resetPassword, comprobarToken, nuevoPassword,
-    autenticarLogin } from '../controllers/userController.js'
+    autenticarLogin, cerrarSesion } from '../controllers/userController.js'
 
 const router = e.Router();
 
 router.get('/login', login)
 router.post('/login', autenticarLogin)
+
+router.post('/cerrar-sesion', cerrarSesion)
 
 router.get('/registro', registro)
 router.post('/registro', registrarUsuario)
