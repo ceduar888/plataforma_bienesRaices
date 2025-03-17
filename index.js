@@ -23,7 +23,7 @@ app.set('view engine', 'pug')
 app.set('views', './views')
 
 // Routing
-app.use('/inicio', appRoutes)
+app.use('/', appRoutes)
 app.use('/auth', userRoutes)
 app.use('/propiedades', propiedadRoutes)
 app.use('/api', apiRoutes)

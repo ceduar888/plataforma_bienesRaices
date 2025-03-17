@@ -4,7 +4,7 @@ import { inicio, noEncontrado, categoria, buscador } from '../controllers/appCon
 const router = e.Router()
 
 // Pagina de inicio
-router.get('/inicio', inicio)
+router.get('/', inicio)
 
 // Categorias
 router.get('/categoria/:id', categoria)
