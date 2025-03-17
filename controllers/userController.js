@@ -141,7 +141,7 @@ const registrarUsuario = async (req, res) => {
     //Mostrar mensaje de exito y de confirmacion de la cuenta
     res.render('templates/mensaje', {
         page: 'Cuenta Creada Correctamente',
-        mensaje: 'Hemos enviado un email de confirmacion, presiona para confirmar'
+        mensaje: 'Hemos enviado un email de confirmacion, revisa tu email, busca en spam si no ves el mensaje en bandeja de entrada'
     })
 }
 
