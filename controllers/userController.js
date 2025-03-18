@@ -74,7 +74,7 @@ const autenticarLogin = async (req, res) => {
 
 // Cerrar Sesion
 const cerrarSesion = async (req, res) => {
-    return res.clearCookie('_token').status(200).redirect('/inicio')
+    return res.clearCookie('_token').status(200).redirect('/')
 }
 
 // METODOS DEL REGISTRO
