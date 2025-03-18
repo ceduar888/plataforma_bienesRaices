@@ -21,11 +21,11 @@ const emailRegistro = async (datos) => {
         subject: 'Confirmacion de cuenta',
         text: 'Confirma tu cuenta',
         html: `
-            <p>Hola ${nombre}, confirma tu cuenta en bienesraices.com</p>
+            <p>Hola ${nombre}, confirma tu cuenta en Bienes Raices</p>
             
             <p>Confirma tu cuenta en el siguiente enlace: <a href="${process.env.BACKEND_URL}:${process.env.PORT ?? 3000}/auth/confirmar/${token}">Confirmar cuenta</a></p>
 
-            <p>Si tu no creaste una cuenta en bienesraices.com, ignora este email</p>
+            <p>Si tu no creaste una cuenta en Bienes Raices, ignora este email</p>
         `
       })
 
